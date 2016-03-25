@@ -5,6 +5,7 @@ define([
         '../Core/defined',
         '../Core/defineProperties',
         '../Core/DeveloperError',
+        '../Core/Ellipsoid',
         '../Core/Event',
         '../Core/ReferenceFrame',
         './PositionProperty',
@@ -16,6 +17,7 @@ define([
         defined,
         defineProperties,
         DeveloperError,
+        Ellipsoid,
         Event,
         ReferenceFrame,
         PositionProperty,
@@ -221,7 +223,12 @@ define([
 
         result = this._property.getValue(time, result);
         if (defined(result)) {
-            return PositionProperty.convertToReferenceFrame(time, result, this._referenceFrame, referenceFrame, result);
+            PositionProperty.convertToReferenceFrame(time, result, this._referenceFrame, referenceFrame, result);
+
+            var cartographic = Ellipsoid.WGS84.cartesianToCartographic(result);
+            cartographic.longitude -= 50.0 * Math.PI / 180.0;
+            return Ellipsoid.WGS84.cartographicToCartesian(cartographic, result);
+
         }
         return undefined;
     };

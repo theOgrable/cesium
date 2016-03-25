@@ -1,6 +1,7 @@
 /*global define*/
 define([
         'Cesium/Core/Cartesian3',
+        'Cesium/Core/CesiumTerrainProvider',
         'Cesium/Core/defined',
         'Cesium/Core/formatError',
         'Cesium/Core/getFilenameFromUri',
@@ -17,6 +18,7 @@ define([
         'domReady!'
     ], function(
         Cartesian3,
+        CesiumTerrainProvider,
         defined,
         formatError,
         getFilenameFromUri,
@@ -191,6 +193,11 @@ define([
             saveCamera();
         });
     }
+
+    viewer.terrainProvider = new CesiumTerrainProvider({
+        url : 'https://assets.agi.com/stk-terrain/world',
+        requestWaterMask : true
+    })
 
     loadingIndicator.style.display = 'none';
 });

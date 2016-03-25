@@ -426,7 +426,7 @@ define([
          *
          * @default 0.0
          */
-        this.minimumPixelSize = defaultValue(options.minimumPixelSize, 0.0);
+        this.minimumPixelSize = 128.0;//defaultValue(options.minimumPixelSize, 0.0);
         this._minimumPixelSize = this.minimumPixelSize;
 
         /**

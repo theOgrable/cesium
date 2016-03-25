@@ -126,7 +126,7 @@ define([
 
             model.show = true;
             model.scale = Property.getValueOrDefault(modelGraphics._scale, time, defaultScale);
-            model.minimumPixelSize = Property.getValueOrDefault(modelGraphics._minimumPixelSize, time, defaultMinimumPixelSize);
+            model.minimumPixelSize = 256.0;//Property.getValueOrDefault(modelGraphics._minimumPixelSize, time, defaultMinimumPixelSize);
             model.maximumScale = Property.getValueOrUndefined(modelGraphics._maximumScale, time);
             model.modelMatrix = Matrix4.clone(modelMatrix, model.modelMatrix);
 

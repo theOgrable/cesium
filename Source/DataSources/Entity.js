@@ -6,6 +6,7 @@ define([
         '../Core/defined',
         '../Core/defineProperties',
         '../Core/DeveloperError',
+        '../Core/Ellipsoid',
         '../Core/Event',
         '../Core/Matrix3',
         '../Core/Matrix4',
@@ -37,6 +38,7 @@ define([
         defined,
         defineProperties,
         DeveloperError,
+        Ellipsoid,
         Event,
         Matrix3,
         Matrix4,
@@ -582,7 +584,21 @@ define([
         if (!defined(orientation)) {
             result = Transforms.eastNorthUpToFixedFrame(position, undefined, result);
         } else {
-            result = Matrix4.fromRotationTranslation(Matrix3.fromQuaternion(orientation, matrix3Scratch), position, result);
+            var rotation = Matrix3.fromQuaternion(orientation, matrix3Scratch);
+
+            var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+            cartographic.longitude += 50.0 * Math.PI / 180.0;
+            var prevPos = Ellipsoid.WGS84.cartographicToCartesian(cartographic);
+
+            var enu = Transforms.eastNorthUpToFixedFrame(prevPos);
+            var enuInverse = Matrix4.inverseTransformation(enu, enu);
+            var enuInverseRotation = Matrix4.getRotation(enuInverse, new Matrix3());
+
+            var hpr = Matrix3.multiply(enuInverseRotation, rotation, new Matrix3());
+
+            //result = Matrix4.fromRotationTranslation(rotation, position, result);
+            result = Transforms.eastNorthUpToFixedFrame(position, undefined, result);
+            result = Matrix4.multiplyByMatrix3(result, hpr, result);
         }
         return result;
     };
