@@ -1046,6 +1046,17 @@ define([
             splitsNear[i + 1] = split;
         }
 
+        // Limit the distance of the first cascade so there is enough detail close up.
+        // Compensate for the reduced first cascade by extending the last cascade.
+        var maximumDistance = 50.0;
+        var distanceOver = splitsFar[0] - (cameraNear + maximumDistance);
+        if (distanceOver > 0.0) {
+            for (var n = 0; n < numberOfCascades - 1; ++n) {
+                splitsFar[n] -= distanceOver;
+                splitsNear[n + 1] -= distanceOver;
+            }
+        }
+
         var cascadeDistances = scratchCascadeDistances;
         for (var m = 0; m < numberOfCascades; ++m) {
             cascadeDistances[m] = splitsFar[m] - splitsNear[m];
